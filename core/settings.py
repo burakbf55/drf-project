@@ -37,10 +37,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # libraries:
     "rest_framework",
+    "rest_framework.authtoken",
+    "rest_auth",
+    ### registration end-pointlerimiz icin
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",  # social login icin gerekli, derslerimizde gormeyecegiz
+    "rest_auth.registration",  # bunu simdi yapiyoruz cunku rest_auth, bu uygulama icin all_auth'u kullaniyor
+    "django.contrib.sites",  # django ile gelen uygulama, bunu da kayit etmemiz gerekiyor
+    ###
     "django_extensions",
-    # MyApps:
     "profiles.apps.ProfilesConfig",
 ]
 
@@ -126,6 +133,21 @@ STATIC_URL = "/static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "uploads"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning'
+}
+
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_VERIFICATION = "none"  # kayit esnasinda email onayi istiyor muyuz?
+ACCOUNT_EMAIL_REQUIRED = (True,)  # kayit esnasinda kullanici email adresi vermeli mi?
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

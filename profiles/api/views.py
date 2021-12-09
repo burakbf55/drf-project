@@ -1,8 +1,13 @@
-from profiles.api.serializers import (ProfileDetailSerializer,
-                                      ProfileFotoSerializer, ProfileSerializer)
+from profiles.api.permissions import DetailOwnerOrReadOnly, ProfileOwnerOrReadOnly
+from profiles.api.serializers import (
+    ProfileDetailSerializer,
+    ProfileFotoSerializer,
+    ProfileSerializer,
+)
 from profiles.models import Profile, ProfileDetail
 from rest_framework import generics, mixins, permissions
 from rest_framework.decorators import permission_classes
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import Serializer
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -17,14 +22,15 @@ class ProfileViewSet(
 
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
-    # Filter ekle, kendi permission_class'ını yap ve buraya ekle.
+    permission_classes = [IsAuthenticated, ProfileOwnerOrReadOnly]
+    filter_backends = (SearchFilter,)  # birden fazla arama filtresi dahil edilebilir
+    search_fields = ("city",)
 
 
 class ProfileDetailViewSet(ModelViewSet):
     queryset = ProfileDetail.objects.all()
     serializer_class = ProfileDetailSerializer
-    permissions_classes = [IsAuthenticated]
+    permissions_classes = [IsAuthenticated, DetailOwnerOrReadOnly]
 
     def get_queryset(self):
         queryset = ProfileDetail.objects.all()
