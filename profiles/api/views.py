@@ -1,3 +1,4 @@
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from profiles.api.permissions import DetailOwnerOrReadOnly, ProfileOwnerOrReadOnly
 from profiles.api.serializers import (
     ProfileDetailSerializer,
@@ -5,6 +6,7 @@ from profiles.api.serializers import (
     ProfileSerializer,
 )
 from profiles.models import Profile, ProfileDetail
+from rest_auth.registration.views import SocialLoginView
 from rest_framework import generics, mixins, permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.filters import SearchFilter
@@ -56,3 +58,7 @@ class ProfilFotoUpdateView(generics.UpdateAPIView):
         profile_object = self.request.user.profile
 
         return profile_object
+
+
+class SocialLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
